@@ -7,38 +7,38 @@ describe('validate()', () =>{
     beforeEach(()=>{
         blockchain = new Blockchain;
     });
-    it('Validar cadena valida', ()=>{
-        blockchain.addBlock('bl0ck-1');
-        blockchain.addBlock('bl0ck-2');
+    
+    it('Crear cadena valida', () =>{
+        blockchain.addBlock('transact0');
+        blockchain.addBlock('transact1');
 
         expect(validate(blockchain.blocks)).toBe(true);
-
     });
 
-    it('Invalidar la cadena con un genesis block corrupto', ()=>{
+    it('Invalidando cadena con un genesis block corrupto', () => {
         blockchain.blocks[0].data = 'h4ck-data';
-        
+
         expect(()=>{
             validate(blockchain.blocks);
-        });toThrowError('Genesis block invalido');
+        }).toThrowError('Bloque Genesis Invalido');
     });
 
-});
+    it('Invalidando una cadena con un previousHash corrupto en un block', () =>{
+        blockchain.addBlock('transact2');
+        blockchain.blocks[1].previousHash = 'h4ck-previousHash';
 
-it('invalidar cadena con previousHash corrupto en un un bloque', () =>{
-    blockchain.addBlock('bl0ck-1');
-    blockchain.blocks[1].previousHash = 'h4sh-previousHash';
+        expect(() => {
+            validate(blockchain.blocks);
+        }).toThrowError('El Previous hash es invalido');
+    }); 
 
-    expect(()=>{
-        validate(blockchain.blocks);
-    });toThrowError('PreviousHash invalido');
-});
+    it('Invalidando una cadena con un block con hash corrupto', () =>{
+        blockchain.addBlock('transact3');
+        blockchain.blocks[1].hash = 'h4ck-hash';
 
-it('invalidar cadena con hash corrupto en un un bloque', () =>{
-    blockchain.addBlock('bl0ck-1');
-    blockchain.blocks[1].hash = 'h4sh-hash';
+        expect(() => {
+            validate(blockchain.blocks);
 
-    expect(()=>{
-        validate(blockchain.blocks);
-    });toThrowError('Hash invalido');
+        }).toThrowError('Hash invalido');
+    });
 });
