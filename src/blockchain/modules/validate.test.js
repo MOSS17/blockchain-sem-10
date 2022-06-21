@@ -3,7 +3,7 @@ import validate from "./validate";
 
 describe('validate()', () =>{
     let blockchain;
-
+// Cambio
     beforeEach(()=>{
         blockchain = new Blockchain;
     });
